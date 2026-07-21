@@ -1,0 +1,69 @@
+COVERING LETTER FOR AMERICAN NATURALIST SUBMISSION
+
+Manuscript Title: "Organisms Write Their Own Evolution: Direct Epigenomic Inheritance Accelerates Learning on Complex Tasks"
+
+════════════════════════════════════════════════════════════════════════════════
+
+WHY THIS MANUSCRIPT IS A GOOD FIT FOR AMERICAN NATURALIST:
+
+This manuscript directly addresses a fundamental question at the heart of modern evolutionary biology: the extent to which organisms actively shape their own evolution. The work bridges computational modeling with evolutionary theory, testing Denis Noble's hypothesis about "organism agency" — the idea that living systems can directly read AND write to their heredity. This represents a significant challenge to purely gene-centric views of inheritance and is central to debates within the Extended Evolutionary Synthesis (EES).
+
+American Naturalist has long been the premier venue for work examining the mechanisms and limits of evolutionary processes. This manuscript contributes to that tradition by:
+
+1. THEORETICAL SIGNIFICANCE: Testing a novel hypothesis (direct epigenomic inheritance) against classical alternatives (selection-only, Baldwin Effect). The results provide quantitative evidence for when organism agency matters and when it doesn't—revealing both the power and limits of extended agency.
+
+2. COMPUTATIONAL RIGOR: 540 experimental runs (30 replicates × 6 tasks × 3 algorithms) with statistical significance testing (Welch's t-tests, p < 0.001). The study is reproducible, with complete code and data available on GitHub.
+
+3. BIOLOGICAL RELEVANCE: The model incorporates epigenomic inheritance, which is documented in real biological systems (DNA methylation, histone modifications). The distinction from Lamarckism is critical: we model regulatory layer (epigenome) inheritance, not genetic inheritance, which is biologically plausible.
+
+4. CLEAR MECHANISTIC INSIGHTS: The findings reveal that extended agency provides dramatic advantage (3-6×) on compatible learning problems (L+T, T+Plus) but no advantage on geometrically incompatible problems (L+Plus). This demonstrates that organism agency is powerful but constrained—a nuanced finding that advances theoretical understanding.
+
+5. COMPOSITION PROBLEM FRAMEWORK: The work connects to ongoing discussions in American Naturalist about how complex traits evolve—showing that inheritance of learned components enables compositional learning in ways selection alone cannot achieve.
+
+════════════════════════════════════════════════════════════════════════════════
+
+ADDITIONAL COMMENTS:
+
+- ANONYMITY: This manuscript is prepared for double-blind review. Author identifying information is provided separately in the Title Page file for editorial processing only.
+
+- REPRODUCIBILITY: All code (Python), data (CSV), and figures (PNG) are publicly available at https://github.com/drartificialife/phenotype-first-evolution under CC-BY-4.0 license. The repository includes complete documentation, requirements.txt for dependencies, and scripts to regenerate all figures.
+
+- SCOPE: At 3,266 words (main text), this manuscript fits well within American Naturalist's format preferences.
+
+- ARTWORK: Four main figures (task environment with grid cells, simple task comparison, compositional task comparison, learning trajectories) plus two tables (algorithm parameters, statistical results). Seven supplementary figures provided in separate supplementary materials document.
+
+════════════════════════════════════════════════════════════════════════════════
+
+ACKNOWLEDGMENTS:
+
+We thank Denis Noble for articulating the hypothesis of organism agency and direct write-back to heredity. We acknowledge the Extended Evolutionary Synthesis framework, which motivated this computational investigation. We thank the reviewers for careful consideration of this work.
+
+════════════════════════════════════════════════════════════════════════════════
+
+STATEMENT OF AUTHORSHIP:
+
+Nam Le conceived the study, designed the computational experiments, implemented all algorithms in Python, conducted the statistical analyses, generated the figures, and wrote the manuscript. All work represents original research conducted independently.
+
+════════════════════════════════════════════════════════════════════════════════
+
+CONFLICT OF INTEREST STATEMENT:
+
+The author declares no competing financial interests or conflicts of interest related to this work.
+
+════════════════════════════════════════════════════════════════════════════════
+
+DATA AVAILABILITY:
+
+All code, data, and figures are available at: https://github.com/drartificialife/phenotype-first-evolution
+
+Repository contents:
+- Python implementations of Gene-Centric GA, Baldwin Effect, and Phenopoiesis algorithms
+- CSV data files containing all 540 experimental run results
+- PNG figure files (33 total: main + supplementary)
+- LaTeX source for main manuscript and supplementary materials
+- Python scripts for figure generation and statistical analysis
+- requirements.txt specifying dependencies (NumPy, SciPy, Matplotlib, Pandas)
+- README with algorithm descriptions and quick-start guide
+- License: CC-BY-4.0 for full academic accessibility
+
+════════════════════════════════════════════════════════════════════════════════
