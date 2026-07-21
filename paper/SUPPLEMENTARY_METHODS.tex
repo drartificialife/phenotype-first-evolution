@@ -1,0 +1,201 @@
+\documentclass[twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\title{Supplementary Methods: Phenotype-First Evolution and Extended Agency}
+\author{Anonymous}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ════════════════════════════════════════════════════════════════════
+% SUPPLEMENTARY METHODS
+% ════════════════════════════════════════════════════════════════════
+
+\section*{Detailed Algorithm Descriptions}
+
+\subsection*{Gene-Centric GA (Baseline)}
+
+The Gene-Centric algorithm represents the minimal evolutionary baseline: pure mutation without learning.
+
+\textbf{Representation}: Each organism has a binary genome of length 100 bits, where each bit represents whether a particular cell (on the 10$\times$10 grid) is occupied.
+
+\textbf{Fitness evaluation}: The organism's phenotype is its genome. Fitness is computed as described in Methods: mean recall across all patterns in the task.
+
+\textbf{Selection}: Tournament selection with tournament size 3. The best individual in each tournament is selected for breeding.
+
+\textbf{Reproduction}: Selected individuals are copied. Each copy undergoes mutation: each bit is flipped with probability 2\% (uniform random mutation).
+
+\textbf{Population dynamics}: Population size 50, 150 generations. No learning, no inheritance of learned information.
+
+\textbf{Convergence criterion}: None. Algorithm runs for full 150 generations.
+
+\subsection*{Baldwin Effect (Learning Without Inheritance)}
+
+The Baldwin Effect tests whether selection-based learning suffices for evolution.
+
+\textbf{Learning phase}: Each organism in each generation is given 20 learning trials. In each trial:
+\begin{enumerate}
+\item A random subset of cells is activated (set to 1) with probability 30\% per cell
+\item Fitness is computed for this modified phenotype
+\item The organism keeps the change if fitness improves; otherwise, reverts
+\item This continues for 20 trials, allowing gradient-free hill-climbing
+\end{enumerate}
+
+After 20 trials, the organism has a learned phenotype that may be better than its genome.
+
+\textbf{Fitness evaluation}: The organism's fitness for selection is its learned phenotype fitness (after 20 learning trials).
+
+\textbf{Selection}: Tournament selection (size 3) based on learned fitness.
+
+\textbf{Reproduction}: Selected individuals are copied. Offspring genomes are identical to parents' genomes (no learning is inherited). Each offspring undergoes mutation (2\% bit flip rate). Offspring will then learn independently.
+
+\textbf{Key point}: Learned information is NOT passed to offspring. Each generation's organisms must learn from scratch. Selection favors organisms whose genomes permit better learning, but learned patterns themselves are not inherited.
+
+\subsection*{Lamarckian GA (Slow Genetic Assimilation)}
+
+The Lamarckian algorithm tests slow write-back via genetic assimilation.
+
+\textbf{Learning phase}: Identical to Baldwin Effect. Each organism learns via 20 trials.
+
+\textbf{Fitness evaluation}: Learned phenotype fitness.
+
+\textbf{Selection}: Tournament selection (size 3).
+
+\textbf{Genetic assimilation}: After selection, before reproduction, a fraction of learned information is encoded into the selected organism's genome.
+
+Specifically, for each cell in the learned phenotype:
+\begin{itemize}
+\item If the cell is occupied in learned phenotype (value 1): set genome bit to 1 with probability 15\%
+\item If the cell is empty in learned phenotype (value 0): set genome bit to 0 with probability 15\%
+\end{itemize}
+
+This 15\% encoding rate means that after 1 generation, 15\% of learned information enters the genome. After 2 generations (if the same organism is selected), up to 15\% $\times$ 2 = 30\% is encoded. Full encoding takes approximately 6--7 generations for a single trait, consistent with genetic assimilation timescales of 50--100 generations for whole populations.
+
+\textbf{Reproduction}: Selected organisms are copied with their updated genomes (now partially encoding learned information). Offspring undergo mutation (2\% per bit).
+
+\textbf{Key point}: Learned information slowly encodes into genes via selection pressure. This is the classic genetic assimilation mechanism documented by Waddington and formalized by Hinton and Nowlan.
+
+\subsection*{Phenotype-First GA (Epigenomic Inheritance)}
+
+The Phenotype-First algorithm tests direct, fast write-back via epigenomic inheritance.
+
+\textbf{Organism structure}: Each organism has:
+\begin{itemize}
+\item A genome (binary 100-bit string, initial random)
+\item An epigenome (binary 100-bit string, initially empty)
+\end{itemize}
+
+The phenotype is the union of genome and epigenome: phenotype[i] = max(genome[i], epigenome[i]). This represents open chromatin (epigenome) overlaid on genetic instructions.
+
+\textbf{Learning phase}: Each organism learns via 20 trials on a temporary phenotype copy. Learning modifies the epigenome directly (not the genome). After learning, the organism has:
+\begin{itemize}
+\item Genome (unchanged from birth)
+\item Epigenome (updated from learning)
+\end{itemize}
+
+\textbf{Fitness evaluation}: Fitness is computed on the learned phenotype (genome $\cup$ epigenome).
+
+\textbf{Selection}: Tournament selection (size 3) based on learned fitness.
+
+\textbf{Epigenomic inheritance}: Selected organisms are reproduced. Offspring receive:
+\begin{itemize}
+\item A mutated copy of parent's genome (2\% per bit)
+\item A complete copy of parent's epigenome (direct copy, 100\% fidelity, no mutation)
+\end{itemize}
+
+This is the key difference: learned patterns in the epigenome are passed directly to offspring without waiting for genetic assimilation. Offspring inherit the parent's accumulated learning.
+
+\textbf{Key point}: Direct, fast write-back (1 generation vs. 50--100). Offspring benefit from parent's learned patterns immediately.
+
+% ════════════════════════════════════════════════════════════════════
+% STATISTICAL METHODS
+% ════════════════════════════════════════════════════════════════════
+
+\section*{Statistical Analysis}
+
+\subsection*{Comparison Between Methods}
+
+For each task (simple or compositional), we compared fitness distributions across methods using:
+
+\textbf{ANOVA}: One-way analysis of variance testing the null hypothesis that all methods have equal mean fitness. We report F-statistic and p-value.
+
+\textbf{Welch's t-test}: Pairwise comparison between Phenotype-First and Baldwin Effect, not assuming equal variances. Reports t-statistic and p-value.
+
+\textbf{Cohen's d}: Effect size between Phenotype-First and Baldwin. Interpreted as:
+\begin{itemize}
+\item $d < 0.2$: negligible effect
+\item $0.2 \leq d < 0.5$: small effect
+\item $0.5 \leq d < 0.8$: medium effect
+\item $d \geq 0.8$: large effect
+\end{itemize}
+
+\textbf{Standard deviation}: Reported as $\pm$ notation. For Phenotype-First on T+Plus, we report $s.d. = 0.0$, meaning all 30 runs achieved identical fitness values. This indicates deterministic, non-random learning.
+
+\subsection*{Success Rate}
+
+We define ``success rate'' as the fraction of runs achieving fitness $> 0.8$ (80\% of maximum). This captures high-fidelity learning of patterns.
+
+We also report ``both-present rate'' for compositional tasks: the fraction of runs where both patterns are present (pattern score $\geq 0.5$ for both components).
+
+% ════════════════════════════════════════════════════════════════════
+% CONVERGENCE ANALYSIS
+% ════════════════════════════════════════════════════════════════════
+
+\section*{Convergence Analysis}
+
+For simple pattern learning, we measured convergence speed as the generation at which fitness first exceeded 0.8. Results:
+
+\begin{itemize}
+\item Baldwin Effect: $3.3 \pm 2.1$ generations
+\item Phenotype-First: $2.7 \pm 1.9$ generations
+\item Difference: not significant ($p = 0.559$)
+\end{itemize}
+
+For simple learning, both methods converge at similar speeds. The difference between 3.3 and 2.7 generations is within statistical noise.
+
+For compositional learning, convergence is much slower and depends on the mechanism. Phenotype-First shows steady improvement due to accumulated inheritance, while Baldwin shows stochastic wandering without consistent accumulation.
+
+% ════════════════════════════════════════════════════════════════════
+% ROBUSTNESS CHECKS
+% ════════════════════════════════════════════════════════════════════
+
+\section*{Robustness and Sensitivity Analysis}
+
+\subsection*{Mutation Rate}
+
+We tested mutation rates from 0.5\% to 5\%. Results were robust across this range, with 2\% performing well for all algorithms. Higher mutation rates (5\%) slightly slowed convergence but did not qualitatively change results.
+
+\subsection*{Population Size}
+
+We tested population sizes 25, 50, and 100. Population size 50 was chosen as a balance between computational cost and convergence. Larger populations showed faster convergence but similar final fitness.
+
+\subsection*{Learning Trial Count}
+
+We tested learning trial counts from 5 to 50 trials per organism per generation. With 20 trials, learning was sufficient for good performance without excessive computation. More trials slightly improved performance on compositional tasks but showed diminishing returns.
+
+\subsection*{Epigenomic Fidelity}
+
+For Phenotype-First, we tested whether perfect fidelity (100\%) in epigenomic inheritance was necessary. We tested perfect copy (100\%) versus noisy copy (95\%, 90\%, 85\% fidelity). Results showed that even with 90\% fidelity, Phenotype-First outperformed Baldwin on compositional tasks, but perfect fidelity showed highest reproducibility.
+
+% ════════════════════════════════════════════════════════════════════
+% BIOLOGICAL PLAUSIBILITY
+% ════════════════════════════════════════════════════════════════════
+
+\section*{Biological Plausibility and Limitations}
+
+Our model is a simplified abstraction. Real organisms have vastly more complex learning and genetic systems. Specifically:
+
+\textbf{Direct copy assumption}: We assume epigenomic inheritance is a perfect copy (deepcopy in code). Real epigenomic inheritance involves DNA methylation, histone modifications, and other mechanisms that may degrade over generations. However, evidence for multi-generational epigenetic inheritance (particularly through stress-response pathways) supports the basic principle.
+
+\textbf{Learning mechanism}: We model learning as a gradient-free random walk with fitness feedback. Real organisms use diverse learning mechanisms (neural networks, behavioral trial-and-error, metabolic adaptation). Our abstract model captures the essence: organisms can improve their phenotype through environmental interaction.
+
+\textbf{Substrate}: We use a simple 10$\times$10 grid and geometric shapes. Real evolutionary problems involve complex ecological niches, developmental constraints, and trade-offs. Compositional tasks approximate real problems requiring integration of multiple learned skills (e.g., predator avoidance AND foraging).
+
+\textbf{Trade-offs not modeled}: Real organisms face trade-offs between learning investment and reproduction, between fidelity and plasticity of inherited information. Our simplified model avoids these to isolate the write-back mechanism.
+
+\end{document}
