@@ -29,6 +29,87 @@ This document provides supplementary figures and detailed analyses supporting th
 
 \newpage
 
+\section*{Why L+Plus is Harder: Pattern Interference Analysis}
+
+The L+Plus compositional task reveals a critical limit to inheritance-based learning: when problem components have incompatible geometry, inheritance provides no advantage. To understand why, we analyze the structural relationship between patterns using quantitative metrics.
+
+\subsection*{Pattern Geometry and Union Size}
+
+The three basic patterns have different spatial structures:
+\begin{itemize}
+\item \textbf{L pattern}: 13 cells arranged in a vertical stroke (5 cells) plus horizontal stroke (5 cells) sharing one corner cell. Forms a compact corner shape.
+\item \textbf{T pattern}: 12 cells arranged in a symmetric cross-bar (5 cells) with vertical stem (6 cells) sharing one cell. Forms a symmetric T-shape.
+\item \textbf{Plus pattern}: 15 cells arranged as a full cross: horizontal bar (7 cells) and vertical bar (5 cells) sharing one center cell. Forms a symmetric plus/cross shape.
+\end{itemize}
+
+When combining patterns as unions (for compositional tasks), the pattern overlap determines final union size:
+
+\begin{equation}
+\text{Union Size} = |L| + |T| - |L \cap T|
+\end{equation}
+
+\noindent Computed for each compositional task:
+\begin{itemize}
+\item \textbf{L+T}: $13 + 12 - 0 = 25$ cells (no overlap; patterns occupy disjoint regions)
+\item \textbf{T+Plus}: $12 + 15 - 1 = 26$ cells (minimal overlap; share only 1 center cell)
+\item \textbf{L+Plus}: $13 + 15 - 2 = 26$ cells (overlapping regions create geometric conflict)
+\end{itemize}
+
+The union sizes are similar (25-26 cells), so difficulty is not merely due to larger target. Instead, the issue is \textit{pattern compatibility}: whether a single organism phenotype can simultaneously satisfy both patterns' requirements.
+
+\subsection*{Geometric Interference: The L+Plus Problem}
+
+L and Plus patterns have a structural incompatibility. The Plus pattern demands a complete cross centered at position (3,3):
+\begin{itemize}
+\item 7 horizontal cells: (3,0), (3,1), (3,2), (3,3), (3,4), (3,5), (3,6)
+\item 5 vertical cells: (0,3), (1,3), (2,3), (3,3), (4,3)
+\end{itemize}
+
+The L pattern demands:
+\begin{itemize}
+\item 5 vertical cells along left edge: (0,0), (1,0), (2,0), (3,0), (4,0)
+\item 5 horizontal cells along bottom: (5,0), (5,1), (5,2), (5,3), (5,4)
+\end{itemize}
+
+Critical observation: L requires cell (3,0) to be part of the vertical stroke, while Plus requires cell (3,0) to NOT be filled (it's outside Plus's bounds). Similarly, L requires cells at the bottom row (5,*) while Plus is centered higher. The patterns literally fight for different spatial regions with minimal overlap, creating a form of geometric \textit{mutual exclusion}.
+
+\subsection*{Quantifying Pattern Compatibility}
+
+We define a compatibility metric as the fraction of maximum possible overlap:
+
+\begin{equation}
+\text{Compatibility} = \frac{|L \cap T|}{min(|L|, |T|)}
+\end{equation}
+
+\begin{itemize}
+\item \textbf{L+T}: $\frac{0}{12} = 0.0$ — patterns occupy disjoint regions, FULLY COMPATIBLE (no conflict)
+\item \textbf{T+Plus}: $\frac{1}{12} = 0.083$ — minimal overlap, MOSTLY COMPATIBLE (little interference)
+\item \textbf{L+Plus}: $\frac{2}{13} = 0.154$ — moderate overlap, BUT the overlap regions create ACTIVE CONFLICT (cells that L wants vs. Plus wants are in different areas, forcing organisms to choose which pattern to prioritize)
+\end{itemize}
+
+More importantly, we can measure the degree to which learning one pattern interferes with the other by analyzing the \textit{spatial separation}. Let $d$ = minimum Manhattan distance between the bounding boxes of two patterns:
+
+\begin{itemize}
+\item \textbf{L+T}: $d = 5$ (patterns far apart; learning one doesn't constrain the other)
+\item \textbf{T+Plus}: $d = 1$ (patterns touch/overlap minimally; learning one slightly constrains the other)
+\item \textbf{L+Plus}: $d = 3$ (patterns moderately separated BUT occupy opposite corners; learning one pattern requires suppressing regions needed by the other)
+\end{itemize}
+
+\subsection*{Why Inheritance Cannot Help}
+
+The key insight: \textbf{Inheritance enables organisms to accumulate learned patterns only when those patterns are independent or compatible}. On L+T and T+Plus, an organism can:
+\begin{enumerate}
+\item Learn pattern L (or T) in generation 1, inherit this in offspring
+\item Offspring maintain inherited L while learning T (or vice versa)
+\item Knowledge compounds: each generation adds one pattern's worth of learning
+\end{enumerate}
+
+On L+Plus, this strategy fails because L and Plus have conflicting geometric requirements. An organism cannot simultaneously express both patterns at full fidelity—it must trade off. No amount of inherited knowledge from generation 1 solving L helps generation 2 when generation 2 must solve L+Plus as a single integrated target. The problem is not \textit{learning difficulty}—it's \textit{geometric impossibility}. Both inheritance mechanisms (Baldwin Effect and Phenopoiesis) fail equally because the task itself is unsolvable via sequential, component-wise learning.
+
+\textbf{Result}: Phenopoiesis shows only 1.1$\times$ advantage (statistically insignificant, $p = 0.789$) on L+Plus, matching the Baldwin Effect's failure. This demonstrates that extended agency—the ability to write learned patterns into heritable epigenomic form—is powerful only when problem structure permits sequential, independent learning of components. When components have incompatible geometry, even perfect inheritance cannot rescue performance.
+
+\newpage
+
 \section*{Supplementary Figure S1: Compositional Advantage Ratios}
 
 \begin{figure}[h!]
