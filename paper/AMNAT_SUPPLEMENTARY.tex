@@ -128,6 +128,32 @@ The Modern Synthesis of evolutionary biology (circa 1940s) placed genes at the c
 
 \textbf{Connection to Modern Synthesis:} Gene-Centric GA embodies the Modern Synthesis assumption that heredity flows one-way: genes $\rightarrow$ phenotype $\rightarrow$ selection. Organisms are passive carriers. Variation comes from mutation. Adaptation happens through accumulation of favorable mutations across generations. This baseline reveals what evolution can achieve through selection pressure alone, without any organism learning.
 
+\textbf{Pseudocode:}
+\begin{verbatim}
+GENE-CENTRIC GA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Initialize population P of size 50
+For each generation (150 generations):
+  For each organism O in P:
+    phenotype = genome  # Direct mapping
+    fitness = evaluate(phenotype, target)
+
+  # Selection (tournament)
+  parents = select_tournament(P, fitness)
+
+  # Reproduction
+  offspring = []
+  For each parent in parents:
+    genome_offspring = mutate(parent.genome, mutation_rate=0.02)
+    offspring.append(Organism(genome_offspring))
+
+  P = offspring  # Replace population
+
+Return best organism found
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Key point: NO LEARNING. Phenotype determined by genes only.
+\end{verbatim}
+
 \subsection*{Baldwin Effect: Learning Influences Selection, Not Inherited}
 
 The Baldwin Effect, proposed by James Mark Baldwin (1896) and formalized computationally by Hinton and Nowlan (1987), introduces organism learning while keeping inheritance purely genetic. Learning influences which genes spread, but learned knowledge is not inherited.
@@ -144,6 +170,46 @@ The Baldwin Effect, proposed by James Mark Baldwin (1896) and formalized computa
 \end{enumerate}
 
 \textbf{Key property}: Baldwin Effect is indirect. Learning influences selection (organisms that learn well survive better), but knowledge is only inherited through the slow, multi-generational process of genetic assimilation. Learning acts as a temporary scaffold: it helps the organism survive, and this influences which genes spread.
+
+\textbf{Pseudocode:}
+\begin{verbatim}
+BALDWIN EFFECT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Initialize population P of size 50
+For each generation (150 generations):
+  For each organism O in P:
+    learning_layer = zeros(100)  # Start empty
+
+    # Learning phase: 20 trials of hill-climbing
+    For trial = 1 to 20:
+      candidate = learning_layer.copy()
+      candidate[random_bit] = flip(candidate[random_bit])
+      phenotype = O.genome ∪ candidate
+      fitness_new = evaluate(phenotype, target)
+
+      if fitness_new > evaluate(O.genome ∪ learning_layer, target):
+        learning_layer = candidate  # Keep improvement
+
+    phenotype = O.genome ∪ learning_layer
+    fitness = evaluate(phenotype, target)
+
+  # Selection based on phenotype fitness
+  parents = select_tournament(P, fitness)
+
+  # Reproduction: inherit genome only, NOT learned layer
+  offspring = []
+  For each parent in parents:
+    genome_offspring = mutate(parent.genome, mutation_rate=0.02)
+    offspring.append(Organism(genome_offspring))
+    # Note: learning_layer resets to empty for offspring
+
+  P = offspring
+
+Return best organism found
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Key point: Learning improves survival, but offspring don't inherit learned patterns.
+Knowledge accumulates genetically over many generations (slow).
+\end{verbatim}
 
 \subsection*{Phenotype-First (Phenopoiesis): Direct Epigenomic Inheritance}
 
@@ -171,6 +237,53 @@ Phenopoiesis, the algorithm we propose, implements Denis Noble's hypothesis: org
 \textbf{Key property}: \textbf{Direct write-back}. Organisms compose learned solutions into the epigenomic layer, and this learned knowledge persists unchanged to offspring. Offspring inherit accumulated knowledge and can add new learning on top. Knowledge compounds across generations: offspring don't rediscover parent's solutions; they build on them.
 
 \textbf{Biological basis}: This models epigenomic inheritance, where DNA methylation, histone modifications, and chromatin marks persist through meiosis and pass to offspring. Organisms read genes (phenotype expression depends on genomic information) but also write epigenomic marks during development and learning.
+
+\textbf{Pseudocode:}
+\begin{verbatim}
+PHENOPOIESIS (Phenotype-First with Epigenomic Inheritance)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Initialize population P of size 50
+For each generation (150 generations):
+  For each organism O in P:
+    epigenome = O.epigenome.copy()  # Start with inherited pattern
+
+    # Learning phase: 20 trials modifying epigenome only
+    For trial = 1 to 20:
+      candidate = epigenome.copy()
+      candidate[random_bit] = flip(candidate[random_bit])
+      phenotype = O.genome ∪ candidate
+      fitness_new = evaluate(phenotype, target)
+
+      if fitness_new > evaluate(O.genome ∪ epigenome, target):
+        epigenome = candidate  # Keep improvement
+
+    phenotype = O.genome ∪ epigenome
+    fitness = evaluate(phenotype, target)
+
+  # Selection based on phenotype fitness
+  parents = select_tournament(P, fitness)
+
+  # Reproduction: inherit BOTH genome AND epigenome
+  offspring = []
+  For each parent in parents:
+    # Genome: mutated
+    genome_offspring = mutate(parent.genome, mutation_rate=0.02)
+
+    # Epigenome: PERFECT COPY (100% fidelity)
+    epigenome_offspring = parent.epigenome.copy()  # No mutations
+
+    offspring.append(Organism(genome_offspring, epigenome_offspring))
+
+  P = offspring
+
+Return best organism found
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Key point: CRITICAL DIFFERENCE from Baldwin Effect:
+  - Offspring inherit parent's learned epigenomic patterns at 100% fidelity
+  - Offspring don't need to rediscover parent's solutions
+  - Knowledge compounds: each generation adds new learning on top of inherited learning
+  - This enables 3-6× faster learning on compatible compositional tasks
+\end{verbatim}
 
 \subsection*{Algorithm Comparison: Three Perspectives on Heredity}
 
