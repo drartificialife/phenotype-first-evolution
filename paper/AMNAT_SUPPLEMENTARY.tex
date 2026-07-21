@@ -110,6 +110,99 @@ On L+Plus, this strategy fails because L and Plus have conflicting geometric req
 
 \newpage
 
+\section*{Supplementary Methods: The Three Algorithms Explained}
+
+\subsection*{Gene-Centric Genetic Algorithm (GA): Modern Synthesis Model}
+
+The Modern Synthesis of evolutionary biology (circa 1940s) placed genes at the center of evolution: genes encode traits, mutation creates variation, natural selection determines which alleles persist. Our baseline algorithm, \textbf{Gene-Centric GA}, directly implements this gene-centric model.
+
+\textbf{How it works:}
+\begin{enumerate}
+\item Each organism carries a \textbf{genome} (binary string of 100 bits, representing which of 100 possible grid cells to occupy)
+\item Organisms express their phenotype directly from their genome: phenotype = genome (one-to-one mapping)
+\item Fitness is calculated based on pattern matching: how well the phenotype matches the target
+\item Selection: organisms with higher fitness survive and reproduce (tournament selection)
+\item Reproduction: offspring inherit parent's genome with mutations (2\% of bits randomly flip)
+\item \textbf{Critically: organisms cannot learn}. There is no phenotypic plasticity, no learning trials. Evolution proceeds by genetic change alone
+\end{enumerate}
+
+\textbf{Connection to Modern Synthesis:} Gene-Centric GA embodies the Modern Synthesis assumption that heredity flows one-way: genes $\rightarrow$ phenotype $\rightarrow$ selection. Organisms are passive carriers. Variation comes from mutation. Adaptation happens through accumulation of favorable mutations across generations. This baseline reveals what evolution can achieve through selection pressure alone, without any organism learning.
+
+\subsection*{Baldwin Effect: Learning Influences Selection, Not Inherited}
+
+The Baldwin Effect, proposed by James Mark Baldwin (1896) and formalized computationally by Hinton and Nowlan (1987), introduces organism learning while keeping inheritance purely genetic. Learning influences which genes spread, but learned knowledge is not inherited.
+
+\textbf{How it works:}
+\begin{enumerate}
+\item Each organism carries a \textbf{genome} (100-bit binary string) AND an empty \textbf{learning layer}
+\item \textbf{Learning phase}: organism undergoes 20 learning trials. In each trial, it randomly modifies its learning layer (50\% chance to flip each bit), evaluates fitness, and keeps changes that increase fitness. This is hill-climbing: organisms learn during their lifetime
+\item \textbf{Phenotype expression}: phenotype = genome $\cup$ learned layer (union of genetic and learned parts)
+\item Fitness calculation based on this combined phenotype
+\item Selection: organisms with higher fitness survive (those that learned better solutions survive better)
+\item Reproduction: offspring inherit parent's genome with mutations (2\% per bit), but NOT the parent's learned patterns. The learning layer resets to empty
+\item \textbf{Critically: learning does not persist to offspring}. Each generation must learn from scratch. However, over many generations, selection favors genotypes that are easily learned, eventually encoding learned traits into genes via genetic assimilation
+\end{enumerate}
+
+\textbf{Key property}: Baldwin Effect is indirect. Learning influences selection (organisms that learn well survive better), but knowledge is only inherited through the slow, multi-generational process of genetic assimilation. Learning acts as a temporary scaffold: it helps the organism survive, and this influences which genes spread.
+
+\subsection*{Phenotype-First (Phenopoiesis): Direct Epigenomic Inheritance}
+
+Phenopoiesis, the algorithm we propose, implements Denis Noble's hypothesis: organisms can directly write learned patterns into an inheritable epigenomic layer and pass this learned knowledge to offspring at perfect fidelity.
+
+\textbf{How it works:}
+\begin{enumerate}
+\item Each organism carries TWO independent heritable layers:
+  \begin{itemize}
+  \item \textbf{Genetic layer} (100-bit genome, inherited with mutations 2\% per bit)
+  \item \textbf{Epigenetic layer} (100-bit marks, inherited with PERFECT FIDELITY — 0\% error)
+  \end{itemize}
+\item \textbf{Learning phase}: organism undergoes 20 learning trials. In each trial, it can modify ONLY the epigenetic layer (not genome). Changes that increase fitness are kept. This is learning: organisms write solutions into the epigenomic layer
+\item \textbf{Phenotype expression}: phenotype = genetic layer $\cup$ epigenetic layer (union of both layers)
+\item Fitness based on combined phenotype
+\item Selection: organisms with higher fitness survive
+\item \textbf{Critical inheritance step}: offspring inherit BOTH layers:
+  \begin{itemize}
+  \item Genetic layer from parent WITH mutations (2\% per bit flip)
+  \item Epigenetic layer from parent WITHOUT mutations (perfect 100\% fidelity)
+  \end{itemize}
+\item \textbf{Offspring start with}: the parent's learned solutions (epigenomic marks) PLUS new random exploration space (from genetic mutations)
+\end{enumerate}
+
+\textbf{Key property}: \textbf{Direct write-back}. Organisms compose learned solutions into the epigenomic layer, and this learned knowledge persists unchanged to offspring. Offspring inherit accumulated knowledge and can add new learning on top. Knowledge compounds across generations: offspring don't rediscover parent's solutions; they build on them.
+
+\textbf{Biological basis}: This models epigenomic inheritance, where DNA methylation, histone modifications, and chromatin marks persist through meiosis and pass to offspring. Organisms read genes (phenotype expression depends on genomic information) but also write epigenomic marks during development and learning.
+
+\subsection*{Algorithm Comparison: Three Perspectives on Heredity}
+
+\begin{center}
+\begin{tabular}{l|ccc}
+\hline
+\textbf{Property} & \textbf{Gene-Centric GA} & \textbf{Baldwin Effect} & \textbf{Phenopoiesis} \\
+\hline
+Organism learning & No & Yes (not inherited) & Yes (inherited at 100\%) \\
+Heritable layers & Genome only & Genome only & Genome + Epigenome \\
+Learning mechanism & N/A & Hill-climbing & Hill-climbing \\
+Inheritance fidelity & Genome: 98\% & Genome: 98\% & Genome: 98\%, Epigenome: 100\% \\
+Knowledge accumulation & Genetic (slow) & Genetic (slow) & Epigenetic (fast) \\
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+
+\section*{Supplementary Figure S7: Phenopoiesis Algorithm Pipeline}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=6.5in]{algorithm_pipeline_phenopoiesis.png}
+\caption{\textbf{Phenotype-First (Phenopoiesis) Algorithm: Operational Pipeline.}
+Flowchart illustrating the lifecycle of a single organism in the Phenopoiesis algorithm: (1) Birth with random genetic genome and empty epigenetic layer; (2) Learning phase with 20 learning trials modifying epigenetic layer; (3) Phenotype expression as union of genetic + learned epigenetic layers; (4) Selection based on phenotype fitness; (5) Reproduction via tournament selection; (6) Inheritance where offspring receive mutated genetic genome (2\% bit-flip) AND complete, unmutated copy of parent's learned epigenome.
+\textbf{Key mechanism:} The epigenetic layer is heritable at 100\% fidelity, unlike genetic layer which mutates. This separation enables learned patterns to persist unchanged in offspring while genetic variation continues. Offspring inherit both adaptive genetic material and adaptive learned patterns, enabling knowledge accumulation across generations without requiring genetic encoding.}
+\label{SFig:7}
+\end{figure}
+
+\newpage
+
 \section*{Supplementary Figure S1: Compositional Advantage Ratios}
 
 \begin{figure}[h!]
@@ -184,19 +277,6 @@ Heatmaps and overlap diagrams showing grid cell utilization for each basic patte
 Six-panel figure showing mean fitness trajectories across all 150 generations for Gene-Centric GA (red), Baldwin Effect (orange), and Phenopoiesis (green) on simple and compositional tasks. Shaded regions show $\pm$1 standard deviation.
 \textbf{Key findings:} On simple tasks, all three algorithms show similar trajectories once learning is enabled, indicating inheritance provides no advantage on simple problems. On learnable compositional tasks (L+T, T+Plus), Phenopoiesis shows steep early acceleration while Baldwin shows gradual, stochastic improvement. Phenopoiesis plateaus at generation 40-60, Baldwin continues wandering. On hard compositional task (L+Plus), both algorithms plateau at similar low fitness. Learning dynamics reveal that epigenomic inheritance's advantage emerges early and compounds as inheritance enables organisms to build on prior knowledge.}
 \label{SFig:6}
-\end{figure}
-
-\newpage
-
-\section*{Supplementary Figure S7: Phenopoiesis Algorithm Pipeline}
-
-\begin{figure}[h!]
-\centering
-\includegraphics[width=6.5in]{algorithm_pipeline_phenopoiesis.png}
-\caption{\textbf{Phenotype-First (Phenopoiesis) Algorithm: Operational Pipeline.}
-Flowchart illustrating the lifecycle of a single organism in the Phenopoiesis algorithm: (1) Birth with random genetic genome and empty epigenetic layer; (2) Learning phase with 20 learning trials modifying epigenetic layer; (3) Phenotype expression as union of genetic + learned epigenetic layers; (4) Selection based on phenotype fitness; (5) Reproduction via tournament selection; (6) Inheritance where offspring receive mutated genetic genome (2\% bit-flip) AND complete, unmutated copy of parent's learned epigenome.
-\textbf{Key mechanism:} The epigenetic layer is heritable at 100\% fidelity, unlike genetic layer which mutates. This separation enables learned patterns to persist unchanged in offspring while genetic variation continues. Offspring inherit both adaptive genetic material and adaptive learned patterns, enabling knowledge accumulation across generations without requiring genetic encoding.}
-\label{SFig:7}
 \end{figure}
 
 \newpage
